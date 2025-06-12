@@ -1,0 +1,54 @@
+package com.alli.bookmanager;
+
+import java.sql.*;
+
+public class BookDao {
+    private final Connection conn;
+
+    public BookDao() throws SQLException {
+        // 1) open an in-memory H2 database
+        conn = DriverManager.getConnection("jdbc:h2:mem:books;DB_CLOSE_DELAY=-1");
+        // 2) create the table if it doesn't exist
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("CREATE TABLE IF NOT EXISTS books (" +
+                    "id INT PRIMARY KEY, " +
+                    "title VARCHAR(255), " +
+                    "author VARCHAR(255))");
+        }
+    }
+
+    public void add(Book book) throws SQLException {
+        String sql = "INSERT INTO books (id, title, author) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, book.getId());
+            ps.setString(2, book.getTitle());
+            ps.setString(3, book.getAuthor());
+            ps.executeUpdate();
+        }
+    }
+
+    public Book findById(int id) throws SQLException {
+        String sql = "SELECT id, title, author FROM books WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Book(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("author")
+                    );
+                }
+                return null;  // not found
+            }
+        }
+    }
+
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM books WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+}
