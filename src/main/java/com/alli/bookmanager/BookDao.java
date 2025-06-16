@@ -7,7 +7,9 @@ public class BookDao {
 
     public BookDao() throws SQLException {
         // 1) open an in-memory H2 database
+        // This line means "Use the JDBC driver to create a connection to an H2 in-memory DB named books"
         conn = DriverManager.getConnection("jdbc:h2:mem:books;DB_CLOSE_DELAY=-1");
+
         // 2) create the table if it doesn't exist
         try (Statement stmt = conn.createStatement()) {
             stmt.execute("CREATE TABLE IF NOT EXISTS books (" +
