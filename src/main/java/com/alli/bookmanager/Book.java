@@ -1,9 +1,11 @@
 package com.alli.bookmanager;
 
 public class Book {
-    private final int id;
-    private final String title;
-    private final String author;
+    private int id;
+    private String title;
+    private String author;
+
+
 
     public Book(int id, String title, String author) {
         this.id     = id;
@@ -11,9 +13,23 @@ public class Book {
         this.author = author;
     }
 
+    public Book() {}
+
     public int getId()           { return id; }
     public String getTitle()     { return title; }
     public String getAuthor()    { return author; }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     @Override
     public String toString() {
